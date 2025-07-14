@@ -2,7 +2,7 @@
 
 # ClubHub: A Unified Platform for Campus Club & Society Management and Engagement
 
-A PHP-based cmapus club and society management and engagement system that allows students to apply for clubs, while administrators and officers manage club records efficiently. Built using PHP (OOP), MySQL, and Bootstrap.
+A PHP-based cmapus club and society management and engagement system that allows students to apply for clubs, while administrators and officers manage club records efficiently. Built using PHP, MySQL, HTML, CSS, JavaScript and Bootstrap.
 
 ---
 
@@ -19,8 +19,8 @@ A PHP-based cmapus club and society management and engagement system that allows
 ## 🛠️ Requirements
 
 - PHP 7.4 or higher
-- MySQL / MariaDB
-- XAMPP / WAMP / Local web server
+- MySQL 
+- XAMPP
 - Modern web browser (Chrome, Firefox, etc.)
 
 ---
