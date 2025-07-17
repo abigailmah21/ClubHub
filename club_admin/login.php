@@ -54,7 +54,7 @@ $page_name = explode("/",$page)[count(explode("/",$page)) -1];
                 </div>
                 <?php endif; ?>
                 <div class="container">
-                    <h4 class="fw-bolder text-center">Club Admin/ Staff Login</h4>
+                    <h4 class="fw-bolder text-center">Club Admin Login</h4>
                     <hr>
                     <br>
                     <form action="" id="club-login-form">

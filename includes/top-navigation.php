@@ -33,12 +33,12 @@
                                 </li>
                                 <li class="nav-item dropdown dropdown-hover mx-2">
                                     <a class="nav-link ps-2 d-flex cursor-pointer align-items-center" href="./admin" aria-expanded="false">
-                                        <i class="material-icons opacity-6 me-2 text-md">admin_panel_settings</i> Admin Login
+                                        <i class="material-icons opacity-6 me-2 text-md">admin_panel_settings</i> Admin/ Staff Login
                                     </a>
                                 </li>
                                 <li class="nav-item dropdown dropdown-hover mx-2">
                                     <a class="nav-link ps-2 d-flex cursor-pointer align-items-center" href="./club_admin" aria-expanded="false">
-                                        <i class="material-icons opacity-6 me-2 text-md">person</i> Club Admin/Staff Login
+                                        <i class="material-icons opacity-6 me-2 text-md">person</i> Club Admin Login
                                     </a>
                                 </li>
                             </ul>
