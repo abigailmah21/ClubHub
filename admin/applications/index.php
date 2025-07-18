@@ -1,6 +1,6 @@
 <section class="py-4">
     <div class="container">
-        <h3 class="fw-bolder text-center">Application List</h3>
+        <h3 class="fw-bolder text-center">Club Membership Application List</h3>
         <center>
             <hr class="bg-primary w-25 opacity-100">
         </center>
@@ -19,7 +19,7 @@
                     <th class="text-center">#</th>
                     <th class="text-center">Updated</th>
                     <th class="text-center">Name</th>
-                    <th class="text-center">Year Level-Section</th>
+                    <th class="text-center">Year of Study-Course</th>
                     <th class="text-center">Applied To</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Action</th>

@@ -1,6 +1,6 @@
 <?php 
 if(isset($_GET['id'])){
-    $qry = $conn->query("SELECT a.*,c.name as club, CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) as `name`, CONCAT(a.year_level,' - ',a.section) as `class` FROM `application_list` a inner join club_list c on a.club_id =c.id where a.id = '{$_GET['id']}'");
+    $qry = $conn->query("SELECT a.*,c.name as club, CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) as `name`, CONCAT(a.year_of_study,' - ',a.course) as `class` FROM `application_list` a inner join club_list c on a.club_id =c.id where a.id = '{$_GET['id']}'");
     if($qry->num_rows > 0 ){
         foreach($qry->fetch_array() as $k => $v){
             if(!is_numeric($k))
@@ -22,7 +22,7 @@ if(isset($_GET['id'])){
         <dl class="row">
             <dt class="col-4 border py-1">Name</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($name) ? $name : "" ?></dd>
-            <dt class="col-4 border py-1">Year Level - Section</dt>
+            <dt class="col-4 border py-1">Year of Study - Course</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($class) ? $class : "" ?></dd>
             <dt class="col-4 border py-1">Gender</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($gender) ? $gender : "" ?></dd>

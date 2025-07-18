@@ -34,8 +34,8 @@ CREATE TABLE `application_list` (
   `middlename` text DEFAULT NULL,
   `lastname` text NOT NULL,
   `gender` varchar(50) NOT NULL,
-  `year_level` text NOT NULL,
-  `section` varchar(100) NOT NULL,
+  `year_of_study` text NOT NULL,
+  `course` varchar(100) NOT NULL,
   `message` text NOT NULL,
   `email` text NOT NULL,
   `contact` text NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `application_list` (
 -- Dumping data for table `application_list`
 --
 
-INSERT INTO `application_list` (`id`, `club_id`, `firstname`, `middlename`, `lastname`, `gender`, `year_level`, `section`, `message`, `email`, `contact`, `address`, `status`, `date_created`, `date_updated`) VALUES
+INSERT INTO `application_list` (`id`, `club_id`, `firstname`, `middlename`, `lastname`, `gender`, `year_of_study`, `course`, `message`, `email`, `contact`, `address`, `status`, `date_created`, `date_updated`) VALUES
 (2, 5, 'Mike', 'D', 'Williams', 'Male', 'First Year', 'A', 'Sed nec dapibus nunc. Nulla dapibus aliquam nisi, a gravida arcu interdum sollicitudin. Donec vel sem euismod risus auctor hendrerit quis ac elit. In ut semper urna, ac blandit dolor. Nam porttitor commodo convallis. Vestibulum iaculis leo sed eros efficitur porta. Aenean tempor laoreet sagittis. Maecenas blandit, nisi sed iaculis lacinia, mi arcu tempor magna, id mattis justo ipsum at metus. Phasellus quis semper dui. Curabitur faucibus augue lorem, ut dignissim justo mollis vitae. Vestibulum laoreet tellus pellentesque mi lacinia, sodales accumsan tortor pulvinar. Donec at ante in arcu scelerisque pretium a vel ex.', 'mwilliams@sample.com', '09123456789', 'Sample Address', 2, '2022-04-07 15:55:42', '2022-04-07 16:56:58');
 
 -- --------------------------------------------------------
