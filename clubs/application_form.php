@@ -50,14 +50,14 @@ if(isset($_GET['id'])){
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group mb-3 input-group input-group-dynamic">
-                        <label class="form-label" for="year_level">Year Level <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" required="required" id="year_level" name="year_level">
+                        <label class="form-label" for="year_of_study">Year of Study <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" required="required" id="year_of_study" name="year_of_study">
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group mb-3 input-group input-group-dynamic">
-                        <label class="form-label" for="section">Section <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" required="required" id="section" name="section">
+                        <label class="form-label" for="course">Course <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" required="required" id="course" name="course">
                     </div>
                 </div>
             </div>
