@@ -35,14 +35,14 @@ if(isset($_GET['id'])){
                     <dd class="col-9 px-2"><p class="mb-0"><?= isset($username) ? $username : '' ?></p></dd>
                     <dt class="col-3 px-2">Club</dt>
                     <dd class="col-9 px-2"><p class="mb-0"><?= isset($club) ? $club : 'N/A' ?></p></dd>
-                    <dt class="col-3 px-2">Type</dt>
+                    <dt class="col-3 px-2">Roles</dt>
                     <dd class="col-9 px-2">
                         <?php
                             if(isset($type)){
                                 if($type == 1){
-                                    echo 'Admin';
+                                    echo 'Admin/ Staff';
                                 }else{
-                                    echo 'Club\'s Admin/Staff';
+                                    echo 'Club Admin';
                                 }
                             }
                         ?>

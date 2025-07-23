@@ -38,14 +38,14 @@ if(isset($_GET['id'])){
                         <input type="text" id="lastname" name="lastname" value="<?= isset($lastname) ? $lastname : "" ?>" class="form-control">
                     </div>
                     <div class="input-group mb-3 input-group-dynamic <?= isset($username) ? 'is-filled' : '' ?>">
-                        <label for="username" class="form-label">Username <span class="text-primary">*</span></label>
+                        <label for="username" class="form-label">Username (Sunway ID) <span class="text-primary">*</span></label>
                         <input type="text" id="username" name="username" value="<?= isset($username) ? $username : "" ?>" class="form-control">
                     </div>
                     <div class="form-group mb-3">
-                        <label for="type" class="form-label">Type <span class="text-primary">*</span></label>
+                        <label for="type" class="form-label">Roles <span class="text-primary">*</span></label>
                         <select name="type" id="type" class="form-select rounded-0" required>
-                            <option class="px-2 py-2" value="1" <?= isset($type) && $type == 1 ? 'selected': '' ?>>Admin</option>
-                            <option class="px-2 py-2" value="2" <?= isset($type) && $type == 2 ? 'selected': '' ?>>Club's Admin/Staff</option>
+                            <option class="px-2 py-2" value="1" <?= isset($type) && $type == 1 ? 'selected': '' ?>>Admin/ Staff</option>
+                            <option class="px-2 py-2" value="2" <?= isset($type) && $type == 2 ? 'selected': '' ?>>Club Admin</option>
                         </select>
                     </div>
                     <div id="club-field" class="input-group mb-3 input-group-static is-filled <?= !isset($type) || (isset($type) && $type == 1) ? 'd-none': '' ?>">

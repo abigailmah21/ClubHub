@@ -19,7 +19,7 @@
                     <th class="text-center">Updated</th>
                     <th class="text-center">Name</th>
                     <th class="text-center">Club</th>
-                    <th class="text-center">Type</th>
+                    <th class="text-center">Roles</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
@@ -73,9 +73,9 @@
                     className: 'py-1 px-2 text-center',
                     render:function(data, type, row, meta){
                         if(row.type == 1)
-                            return 'Administrator';
+                            return 'Admin/ Staff';
                         else
-                            return 'Club\'s Admin/Staff';
+                            return 'Club Admin';
                     },
                     width:"15%"
                 },

@@ -26,13 +26,13 @@ if(isset($_GET['id'])){
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($class) ? $class : "" ?></dd>
             <dt class="col-4 border py-1">Gender</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($gender) ? $gender : "" ?></dd>
-            <dt class="col-4 border py-1">Contact #</dt>
+            <dt class="col-4 border py-1">Contact No.</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($contact) ? $contact : "" ?></dd>
-            <dt class="col-4 border py-1">Email</dt>
+            <dt class="col-4 border py-1">Sunway iMail</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($email) ? $email : "" ?></dd>
             <dt class="col-4 border py-1">Address</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($address) ? $address : "" ?></dd>
-            <dt class="col-4 border py-1">Message</dt>
+            <dt class="col-4 border py-1">Reason for Joining</dt>
             <dd class="col-8 px-2 border py-1 mb-0"><?= isset($message) ? $message : "" ?></dd>
             <dt class="col-4 border py-1">Status</dt>
             <dd class="col-8 px-2 border py-1 mb-0">

@@ -64,13 +64,13 @@ if(isset($_GET['id'])){
             <div class="row mb-2">
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group mb-3 input-group input-group-dynamic">
-                        <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
+                        <label class="form-label" for="email">Sunway iMail <span class="text-danger">*</span></label>
                         <input type="email" class="form-control" required="required" id="email" name="email">
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group mb-3 input-group input-group-dynamic">
-                        <label class="form-label" for="contact">Contact # <span class="text-danger">*</span></label>
+                        <label class="form-label" for="contact">Contact No. <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" required="required" id="contact" name="contact">
                     </div>
                 </div>

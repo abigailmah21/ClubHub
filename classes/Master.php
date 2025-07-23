@@ -213,8 +213,8 @@ Class Master extends DBConnection {
 	}
 	function delete_user(){
 		extract($_POST);
-		$get = $this->conn->query("SELECT * `users` where id = '{$id}' ")->fetch_array();
-		$delete = $this->conn->query("UPDATE `users` where id = '{$id}' ");
+		$get = $this->conn->query("SELECT * FROM `users` where id = '{$id}'")->fetch_array();
+		$delete = $this->conn->query("DELETE FROM `users` where id = '{$id}'");
 		if($delete){
 			$resp['status'] = 'success';
 			$this->settings->set_flashdata('success'," User has been deleted successfully");
@@ -232,48 +232,54 @@ Class Master extends DBConnection {
 	}
 	function dt_users(){
 		extract($_POST);
-		$totalCount = $this->conn->query("SELECT * FROM `users` where id != '{$this->settings->userdata('id')}' ")->num_rows;
+		$totalCount = $this->conn->query("SELECT * FROM `users` a LEFT JOIN club_list c ON a.club_id = c.id WHERE a.id != '{$this->settings->userdata('id')}'")->num_rows;
 		$search_where = "";
-		$columns_arr = array("unix_timestamp(date_updated)",
-							"unix_timestamp(date_updated)",
-							"CONCAT(lastname, ', ',firstname,' ',COALESCE(middlename,''))",
-							"status",
-							"unix_timestamp(birthdate)");
+		$columns_arr = array(
+			"unix_timestamp(a.date_updated)",
+			"unix_timestamp(a.date_updated)",
+			"CONCAT(a.lastname, ', ',a.firstname,' ',COALESCE(a.middlename,''))",
+			"c.name",
+			"a.type"
+		);
 		if(!empty($search['value'])){
-			$search_where .= "firstname LIKE '%{$search['value']}%' ";
-			$search_where .= " OR lastname LIKE '%{$search['value']}%' ";
-			$search_where .= " OR middlename LIKE '%{$search['value']}%' ";
-			$search_where .= " OR CONCAT(lastname, ', ',firstname,' ',COALESCE(middlename,'')) LIKE '%{$search['value']}%' ";
-			$search_where .= " OR CONCAT(firstname,' ',COALESCE(middlename,''), ' ', lastname) LIKE '%{$search['value']}%' ";
-			$search_where .= " OR date_format(date_updated,'%M %d, %Y') LIKE '%{$search['value']}%' or club_id in (SELECT id FROM club_list where name LIKE '%{$search['value']}%' ) ";
-			$search_where = " and ({$search_where}) ";
+			$search_where .= " AND (a.firstname LIKE '%{$search['value']}%' ";
+			$search_where .= " OR a.lastname LIKE '%{$search['value']}%' ";
+			$search_where .= " OR a.middlename LIKE '%{$search['value']}%' ";
+			$search_where .= " OR CONCAT(a.lastname, ', ',a.firstname,' ',COALESCE(a.middlename,'')) LIKE '%{$search['value']}%' ";
+			$search_where .= " OR CONCAT(a.firstname,' ',COALESCE(a.middlename,''), ' ', a.lastname) LIKE '%{$search['value']}%' ";
+			$search_where .= " OR date_format(a.date_updated,'%M %d, %Y') LIKE '%{$search['value']}%' ";
+			$search_where .= " OR c.name LIKE '%{$search['value']}%' )";
 		}
-		$query = $this->conn->query("SELECT *,CONCAT(lastname, ', ',firstname,' ',COALESCE(middlename,'')) as `name` FROM `users`  where id != '{$this->settings->userdata('id')}'  {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
-		$query2 = $this->conn->query("SELECT * FROM `users`  where id != '{$this->settings->userdata('id')}'  {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
-		$recordsFilterCount = $this->conn->query("SELECT * FROM `users`  where id != '{$this->settings->userdata('id')}'  {$search_where} ")->num_rows;
 		
-		$recordsTotal= $totalCount;
-		$recordsFiltered= $recordsFilterCount;
+		$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname, ', ',a.firstname,' ',COALESCE(a.middlename,'')) as `name`, 
+			c.name as club 
+			FROM `users` a 
+			LEFT JOIN club_list c ON a.club_id = c.id 
+			WHERE a.id != '{$this->settings->userdata('id')}' {$search_where} 
+			ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} 
+			LIMIT {$length} OFFSET {$start}");
+			
+		$recordsFilterCount = $this->conn->query("SELECT a.* FROM `users` a 
+			LEFT JOIN club_list c ON a.club_id = c.id 
+			WHERE a.id != '{$this->settings->userdata('id')}' {$search_where}")->num_rows;
+		
+		$recordsTotal = $totalCount;
+		$recordsFiltered = $recordsFilterCount;
 		$data = array();
-		$i= 1 + $start;
-		$club_arr = [];
-		$cids = array_column($query2->fetch_all(MYSQLI_ASSOC),'club_id');
-		if(count($cids) > 0){
-			$clubs = $this->conn->query("SELECT `name` as club,id FROM club_list where id in (".(implode(",",$cids)).")")->fetch_all(MYSQLI_ASSOC);
-			$club_arr = array_column($clubs,'club','id');
-		}
+		$i = 1 + $start;
+		
 		while($row = $query->fetch_assoc()){
 			$row['no'] = $i++;
-			$row['club'] = isset($club_arr[$row['club_id']]) ? $club_arr[$row['club_id']] : "N/A";
-			$row['date_updated'] = date("F d, Y H:i",strtotime($row['date_updated']));
+			$row['date_updated'] = date("F d, Y H:i", strtotime($row['date_updated']));
 			$data[] = $row;
 		}
-		echo json_encode(array('draw'=>$draw,
-							'recordsTotal'=>$recordsTotal,
-							'recordsFiltered'=>$recordsFiltered,
-							'data'=>$data
-							)
-		);
+		
+		echo json_encode(array(
+			'draw' => $draw,
+			'recordsTotal' => $recordsTotal,
+			'recordsFiltered' => $recordsFiltered,
+			'data' => $data
+		));
 	}
 	function save_application(){
 		extract($_POST);
@@ -295,7 +301,7 @@ Class Master extends DBConnection {
 			$cid= empty($id) ? $this->conn->insert_id : $id ;
 			$resp['status'] = 'success';
 			if(empty($id))
-				$this->settings->set_flashdata('success',"Your application has been submitted successfully. The Club's Admin/Staff will contact you using your given contact information regarding to your application. Thank you! ");
+				$this->settings->set_flashdata('success',"Your application has been submitted successfully. The Club Admin will contact you using your given contact information regarding to your application. Thank you! ");
 			else
 				$this->settings->set_flashdata('success',"Application has been updated. ");
 		}else{

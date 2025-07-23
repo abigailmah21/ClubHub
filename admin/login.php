@@ -29,8 +29,22 @@ $page_name = explode("/",$page)[count(explode("/",$page)) -1];
         position:fixed;
         bottom:0;
     }
-    footer *{
-        color: var(--bs-primary) !important;
+    footer *, footer p, footer p.text-primary, footer p.text-dark {
+        color: #bac1c8 !important;
+    }
+    .footer.bg-dark {
+        background-color: #0e2b5e !important;
+    }
+    /* Login button styles */
+    .btn.btn-primary.login-button {
+        background-color: #1a4189;
+        border-color: #1a4189;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .btn.btn-primary.login-button:hover {
+        background-color: #245abc;
+        border-color: #245abc;
     }
 </style>
 <body class="index-page bg-gray-200">
@@ -74,7 +88,7 @@ $page_name = explode("/",$page)[count(explode("/",$page)) -1];
                             <a href="<?= base_url ?>" class="text-primary">View Site</a>
                         </div>
                         <div class="col-sm-6 text-end">
-                            <button class="btn btn-primary bg-gradient rounded-0 mb-0">Login</button>
+                            <button class="btn btn-primary bg-gradient mb-0 login-button">Login</button>
                         </div>
                     </div>
                     </form>
