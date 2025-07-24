@@ -26,6 +26,11 @@
                                         <i class="material-icons opacity-6 me-2 text-md">text_snippet</i> Applications
                                     </a>
                                 </li>
+                                <li class="nav-item dropdown dropdown-hover mx-2">
+                                    <a class="nav-link ps-2 d-flex cursor-pointer align-items-center <?= $page == "events" ? "text-primary" : "" ?>" href="./?page=events" aria-expanded="false">
+                                        <i class="material-icons opacity-6 me-2 text-md">event</i> Events
+                                    </a>
+                                </li>
                                 <li class="nav-item my-auto ms-3 ms-lg-0">
                                     <a class="nav-link ps-2 d-flex cursor-pointer align-items-center" id="dropdownMenuUser" data-bs-toggle="dropdown" aria-expanded="false">
                                         <span><img src="<?= validate_image($_settings->userdata('avatar')) ?>" alt="<?= $_settings->userdata('username') ?> Image" class="image-user img-thumbnail rounded-circle"></span>

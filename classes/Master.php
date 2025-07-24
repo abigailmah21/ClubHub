@@ -400,7 +400,109 @@ Class Master extends DBConnection {
 							)
 		);
 	}
-	
+    function save_event(){
+        extract($_POST);
+        $data = "";
+        foreach($_POST as $k => $v){
+            if(!in_array($k, ['id', 'description'])){
+                if($k == 'category') {
+                    $v = $this->conn->real_escape_string($v);
+                }
+                $v = $this->conn->real_escape_string($v);
+                if(!empty($data)) $data .= ", ";
+                $data .= "`{$k}` = '{$v}'";
+            }
+        }
+        
+        // Add club_id from session
+        if(empty($data)) $data = " club_id = '{$this->settings->userdata('club_id')}'";
+        else $data .= ", club_id = '{$this->settings->userdata('club_id')}'";
+        
+        if(empty($id)){
+            $sql = "INSERT INTO `event_list` set {$data}";
+        }else{
+            $sql = "UPDATE `event_list` set {$data} where id = '{$id}' and club_id = '{$this->settings->userdata('club_id')}'";
+        }
+        
+        $save = $this->conn->query($sql);
+        if($save){
+            $eid = empty($id) ? $this->conn->insert_id : $id;
+            $resp['status'] = 'success';
+            $resp['id'] = $eid;
+            
+            // Save description
+            if(isset($description)){
+                $description = htmlentities($description);
+                if(!is_dir(base_app."event_contents"))
+                    mkdir(base_app."event_contents");
+                file_put_contents(base_app."event_contents/{$eid}.html", $description);
+            }
+            
+            // Handle image upload
+            if(isset($_FILES['event_cover']) && $_FILES['event_cover']['tmp_name'] != ''){
+                $upload_path = "uploads/event_covers/";
+                if(!is_dir(base_app.$upload_path))
+                    mkdir(base_app.$upload_path);
+                
+                $filename = $eid.'.png';
+                $filepath = $upload_path.$filename;
+                
+                $type = mime_content_type($_FILES['event_cover']['tmp_name']);
+                $allowed = array('image/png','image/jpeg');
+                if(!in_array($type, $allowed)){
+                    $resp['msg'] = "Image failed to upload due to invalid file type.";
+                }else{
+                    $new_height = 800; 
+                    $new_width = 1200; 
+            
+                    list($width, $height) = getimagesize($_FILES['event_cover']['tmp_name']);
+                    $t_image = imagecreatetruecolor($new_width, $new_height);
+                    imagealphablending($t_image, false);
+                    imagesavealpha($t_image, true);
+                    $gdImg = ($type == 'image/png')? imagecreatefrompng($_FILES['event_cover']['tmp_name']) : imagecreatefromjpeg($_FILES['event_cover']['tmp_name']);
+                    imagecopyresampled($t_image, $gdImg, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
+                    if($gdImg){
+                        if(is_file(base_app.$filepath))
+                            unlink(base_app.$filepath);
+                        $uploaded_img = imagepng($t_image, base_app.$filepath);
+                        imagedestroy($gdImg);
+                        imagedestroy($t_image);
+                        if(isset($uploaded_img)){
+                            $this->conn->query("UPDATE event_list set event_cover = CONCAT('{$filepath}','?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$eid}'");
+                        }
+                    }else{
+                        $resp['msg'] = "Image failed to upload due to unknown reason.";
+                    }
+                }
+            }
+            
+            if(empty($id))
+                $this->settings->set_flashdata('success', "Event has been created successfully.");
+            else
+                $this->settings->set_flashdata('success', "Event has been updated successfully.");
+                
+        }else{
+            $resp['status'] = 'failed';
+            $resp['msg'] = 'An error occurred while saving the event.';
+            $resp['error'] = $this->conn->error;
+            $resp['sql'] = $sql;
+        }
+        return json_encode($resp);
+    }
+    
+    function delete_event(){
+        extract($_POST);
+        $delete = $this->conn->query("UPDATE `event_list` set delete_flag = 1 where id = '{$id}' and club_id = '{$this->settings->userdata('club_id')}'");
+        if($delete){
+            $resp['status'] = 'success';
+            $this->settings->set_flashdata('success', "Event has been deleted successfully.");
+        }else{
+            $resp['status'] = 'failed';
+            $resp['error'] = $this->conn->error;
+        }
+        return json_encode($resp);
+    }
+    
 }
 
 $Master = new Master();
@@ -436,6 +538,12 @@ switch ($action) {
 	break;
 	case 'dt_club_applications':
 		echo $Master->dt_club_applications();
+	break;
+	case 'save_event':
+		echo $Master->save_event();
+	break;
+	case 'delete_event':
+		echo $Master->delete_event();
 	break;
 	default:
 		// echo $sysset->index();

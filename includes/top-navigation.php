@@ -27,6 +27,11 @@
                                     </a>
                                 </li>
                                 <li class="nav-item dropdown dropdown-hover mx-2">
+                                    <a class="nav-link ps-2 d-flex cursor-pointer align-items-center <?= $page == "events" ? "text-primary" : "" ?>" href="./?page=events" aria-expanded="false">
+                                        <i class="material-icons opacity-6 me-2 text-md">event</i> Events
+                                    </a>
+                                </li>
+                                <li class="nav-item dropdown dropdown-hover mx-2">
                                     <a class="nav-link ps-2 d-flex cursor-pointer align-items-center <?= $page == "about" ? "text-primary" : "" ?>" href="./?page=about" aria-expanded="false">
                                         <i class="material-icons opacity-6 me-2 text-md">info</i> About Us
                                     </a>
