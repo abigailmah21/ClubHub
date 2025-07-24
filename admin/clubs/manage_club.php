@@ -32,6 +32,22 @@ if(isset($_GET['id'])){
                         </div>
                     </div>
                     <div class="form-group mb-3">
+                        <label for="category" class="form-label">Category <span class="text-primary">*</span></label>
+                        <select name="category" id="category" class="form-select rounded-0" required>
+                            <option value="" disabled <?= !isset($category) ? 'selected' : '' ?>>Select Category</option>
+                            <option value="Student Organisations" <?= isset($category) && $category == 'Student Organisations' ? 'selected': '' ?>>Student Organisations</option>
+                            <option value="Art & Music" <?= isset($category) && $category == 'Art & Music' ? 'selected': '' ?>>Art & Music</option>
+                            <option value="Business" <?= isset($category) && $category == 'Business' ? 'selected': '' ?>>Business</option>
+                            <option value="Cultural" <?= isset($category) && $category == 'Cultural' ? 'selected': '' ?>>Cultural</option>
+                            <option value="General Interest" <?= isset($category) && $category == 'General Interest' ? 'selected': '' ?>>General Interest</option>
+                            <option value="Martial Art" <?= isset($category) && $category == 'Martial Art' ? 'selected': '' ?>>Martial Art</option>
+                            <option value="Nature" <?= isset($category) && $category == 'Nature' ? 'selected': '' ?>>Nature</option>
+                            <option value="Religious" <?= isset($category) && $category == 'Religious' ? 'selected': '' ?>>Religious</option>
+                            <option value="Sports" <?= isset($category) && $category == 'Sports' ? 'selected': '' ?>>Sports</option>
+                            <option value="Uniform/Affiliate" <?= isset($category) && $category == 'Uniform/Affiliate' ? 'selected': '' ?>>Uniform/Affiliate</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
                         <label for="description" class="form-label">Short Description <span class="text-primary">*</span></label>
                         <textarea rows="4" id="description" name="description" class="form-control border rounded-0" required="required"><?= isset($description) ? $description : '' ?></textarea>
                     </div>

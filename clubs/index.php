@@ -15,6 +15,8 @@ $categories = array(
 );
 ?>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+    
     .club-item:nth-child(2n-5){
         backdrop-filter: brightness(0.9);
     }
@@ -56,6 +58,8 @@ $categories = array(
         font-size: 1.2rem;
         margin-bottom: 0.75rem;
         color: #333;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 400;
     }
     .search-input {
         width: 100%;
@@ -63,6 +67,7 @@ $categories = array(
         border: 1px solid #ddd;
         border-radius: 4px;
         font-size: 1rem;
+        font-family: 'Poppins', sans-serif;
     }
     .category-select {
         width: 100%;
@@ -72,17 +77,30 @@ $categories = array(
         font-size: 1rem;
         background-color: white;
         cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        padding-right: 2.5rem;
+    }
+    .category-select::-ms-expand {
+        display: none;
     }
     .search-button {
         background-color: #FF8C42;
         color: white;
         border: none;
-        padding: 0.75rem 2.5rem;
-        border-radius: 2rem;
-        font-size: 1rem;
+        padding: 0.6rem 2rem;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: 500;
         cursor: pointer;
-        margin-top: 1.9rem;
+        margin-top: 2.3rem;
         transition: background-color 0.3s ease;
+        min-width: 120px;
+        font-family: 'Poppins', sans-serif;
+        letter-spacing: 0.5px;
     }
     .search-button:hover {
         background-color: #F17A35;
@@ -132,8 +150,8 @@ $categories = array(
 </section>
 <script>
     $(function(){
-        // Search functionality
-        $('#search-btn').click(function() {
+        // Search function
+        function performSearch() {
             const keyword = $('#keyword-search').val().toLowerCase();
             const category = $('#category-search').val();
             
@@ -156,13 +174,19 @@ $categories = array(
                     $club.hide();
                 }
             });
+        }
+
+        // Trigger search on keyword input with small delay for better performance
+        let keywordTimer;
+        $('#keyword-search').on('input', function() {
+            clearTimeout(keywordTimer);
+            keywordTimer = setTimeout(performSearch, 300); // 300ms delay
         });
 
-        // Reset search when inputs change
-        $('#keyword-search, #category-search').on('input change', function() {
-            if ($(this).val() === '') {
-                $('.club-item').show();
-            }
-        });
+        // Trigger search immediately on category change
+        $('#category-search').on('change', performSearch);
+
+        // Keep the search button for accessibility, but make it optional
+        $('#search-btn').click(performSearch);
     });
 </script>
