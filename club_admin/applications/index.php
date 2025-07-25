@@ -7,10 +7,11 @@
         <table class="table table-striped table-bordered dt-init">
             <colgroup>
                 <col width="5%">
+                <col width="15%">
                 <col width="20%">
-                <col width="30%">
+                <col width="15%">
                 <col width="20%">
-                <col width="10%">
+                <col width="15%">
                 <col width="10%">
             </colgroup>
             <thead>
@@ -18,6 +19,7 @@
                     <th class="text-center">#</th>
                     <th class="text-center">Updated</th>
                     <th class="text-center">Name</th>
+                    <th class="text-center">Student ID</th>
                     <th class="text-center">Year of Study-Course</th>
                     <th class="text-center">Status</th>
                     <th class="text-center">Action</th>
@@ -55,12 +57,17 @@
                 {
                     data: 'date_updated',
                     className: 'py-1 px-2',
-                    width:"20%"
+                    width:"15%"
                 },
                 {
                     data: 'name',
                     className: 'py-1 px-2',
-                    width:"30%"
+                    width:"20%"
+                },
+                {
+                    data: 'student_id',
+                    className: 'py-1 px-2',
+                    width:"15%"
                 },
                 {
                     data: 'class',
@@ -88,7 +95,6 @@
                                 stat = ""
                                 break;
                         }
-                        console.log(stat)
                         return stat;
                     },
                     width:"15%"
@@ -105,16 +111,14 @@
                         el.find('.edit_data,.delete_data,.view_data').attr('data-id',row.id).attr('data-name',row.name)
                         el.find('.edit_data').attr("href","./?page=applications/manage_application&id="+row.id)
                         el.find('.view_data').attr("href","./?page=applications/view_details&id="+row.id)
-                        
                         return el.html();
-                        
                     },
                     width:"10%"
                 }
             ],
             columnDefs: [{
                 orderable: false,
-                targets: 5
+                targets: 6
             }],
             initComplete: function(settings, json) {
                 $('table td, table th').addClass('px-2 py-1 align-middle')

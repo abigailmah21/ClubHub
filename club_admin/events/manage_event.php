@@ -6,6 +6,11 @@ if(isset($_GET['id'])){
             if(!is_numeric($k))
             $$k = $v;
         }
+        // Load description from file
+        $desc_file = base_app."event_contents/{$id}.html";
+        if(file_exists($desc_file)){
+            $description = html_entity_decode(file_get_contents($desc_file));
+        }
     }
 }
 ?>

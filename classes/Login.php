@@ -60,18 +60,22 @@ class Login extends DBConnection {
 						$this->settings->set_userdata($k,$v);
 					}
 				}
-				$this->settings->set_userdata('login_type',1);
-				$resp['status'] = 'success';
-			}else{
-				$resp['status'] = 'failed';
-				$resp['msg'] = 'Incorrect Username or Password';
-			}
+            
+            if(isset($data['club_id'])) {
+                $this->settings->set_userdata('club_id', $data['club_id']);
+            }
+			$this->settings->set_userdata('login_type',1);
+			$resp['status'] = 'success';
 		}else{
 			$resp['status'] = 'failed';
 			$resp['msg'] = 'Incorrect Username or Password';
 		}
-		return json_encode($resp);
+	}else{
+		$resp['status'] = 'failed';
+		$resp['msg'] = 'Incorrect Username or Password';
 	}
+	return json_encode($resp);
+}
 	public function clogout(){
 		if($this->settings->sess_des()){
 			redirect('club_admin/login.php');

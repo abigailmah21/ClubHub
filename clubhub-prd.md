@@ -75,7 +75,7 @@ Reference for UI: [Sunway Student Organisations](https://student.sunway.edu.my/c
   * Add New membership Application/ View membership Applications list/ Edit membership Application Details/ Delete membership Application
 * **Event Management** **(CRUD)**
 
-  * Add new events (Event details: title, date, time, venue)/ List All Event Details/ View Event Details/ Edit Event Details/ Delete Event Details
+  * Add new events (Event details: title, date, time, venue, category)/ List All Event Details/ View Event Details/ Edit Event Details/ Delete Event Details
 * **Event Registration Management**
 
   * List / View / Edit Event registrations. (from registrations made by users on public side)

@@ -370,7 +370,8 @@ Class Master extends DBConnection {
 		$totalCount = $this->conn->query("SELECT * FROM `application_list` where club_id = '{$this->settings->userdata('club_id')}'")->num_rows;
 		$search_where = "";
 		if(!empty($search['value'])){
-			$search_where .= "CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) LIKE '%{$search['value']}%' ";
+			$search_where .= "CONCAT(a.lastname,', ',a.firstname) LIKE '%{$search['value']}%' ";
+			$search_where .= " OR a.student_id LIKE '%{$search['value']}%' ";
 			$search_where .= " OR a.year_of_study LIKE '%{$search['value']}%' ";
 			$search_where .= " OR a.course LIKE '%{$search['value']}%' ";
 			$search_where .= " OR DATE_FORMAT(a.date_updated,'%M %d, %Y') LIKE '%{$search['value']}%' ";
@@ -378,10 +379,11 @@ Class Master extends DBConnection {
 		}
 		$columns_arr = array("unix_timestamp(a.date_updated)",
 							"unix_timestamp(a.date_updated)",
-							"CONCAT(lastname,', ',firstname,' ', COALESCE(middlename,''))",
+							"CONCAT(lastname,', ',firstname)",
+							"a.student_id",
 							"CONCAT(a.year_of_study, ' - ',a.course)",
 							"a.status");
-		$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) as `name`, CONCAT(a.year_of_study,' - ',a.course) as `class`, c.name as club FROM `application_list` a inner join club_list c on a.club_id = c.id where a.club_id = '{$this->settings->userdata('club_id')}'  {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
+		$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname,', ',a.firstname) as `name`, CONCAT(a.year_of_study,' - ',a.course) as `class`, c.name as club FROM `application_list` a inner join club_list c on a.club_id = c.id where a.club_id = '{$this->settings->userdata('club_id')}'  {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
 		$recordsFilterCount = $this->conn->query("SELECT a.* FROM `application_list` a inner join club_list c on a.club_id = c.id where a.club_id = '{$this->settings->userdata('club_id')}'  {$search_where} ")->num_rows;
 		
 		$recordsTotal= $totalCount;
@@ -408,7 +410,6 @@ Class Master extends DBConnection {
                 if($k == 'category') {
                     $v = $this->conn->real_escape_string($v);
                 }
-                $v = $this->conn->real_escape_string($v);
                 if(!empty($data)) $data .= ", ";
                 $data .= "`{$k}` = '{$v}'";
             }

@@ -15,7 +15,8 @@ if(isset($_GET['id'])){
         <center>
             <hr class="border-dark border-4 opacity-100" width="10%" style="height:2.5px">
         </center>
-        <form action="" id="application-form">
+        <div class="alert-container mb-5"></div>
+        <form action="" id="application-form" enctype="multipart/form-data">
             <input type="hidden" name="id">
             <input type="hidden" name="club_id" value="<?= isset($id) ? $id : '' ?>">
             <div class="row mb-2">
@@ -27,14 +28,14 @@ if(isset($_GET['id'])){
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group mb-3 input-group input-group-dynamic">
-                        <label class="form-label" for="middlename">Middle Name</label>
-                        <input type="text" class="form-control" id="middlename" name="middlename">
+                        <label class="form-label" for="lastname">Last Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" required="required" id="lastname" name="lastname">
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                     <div class="form-group mb-3 input-group input-group-dynamic">
-                        <label class="form-label" for="lastname">Last Name <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" required="required" id="lastname" name="lastname">
+                        <label class="form-label" for="student_id">Student ID <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" required="required" id="student_id" name="student_id" pattern="[0-9]{6}" title="Student ID must be exactly 6 digits">
                     </div>
                 </div>
             </div>
@@ -43,8 +44,9 @@ if(isset($_GET['id'])){
                     <div class="form-group mb-3 input-group input-group-dynamic is-filled">
                         <label class="form-label" for="gender">Gender <span class="text-danger">*</span></label>
                         <select type="text" class="form-select" required="required" id="gender" name="gender">
-                            <option>Male</option>
-                            <option>Female</option>
+                            <option value="">Select Gender</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
                         </select>
                     </div>
                 </div>
@@ -78,16 +80,8 @@ if(isset($_GET['id'])){
             <div class="row mb-2">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="form-group mb-3">
-                        <label class="form-label" for="address">Address <span class="text-danger">*</span></label>
-                        <textarea rows="3" class="form-control border px-2 py-3 rounded-0" required="required" id="address" name="address"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row mb-2">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="form-group mb-3">
-                        <label class="form-label" for="message">Why do you want join to this club? <span class="text-danger">*</span></label>
-                        <textarea rows="4" class="form-control border px-2 py-3 rounded-0" required="required" id="message" name="message"></textarea>
+                        <label class="form-label" for="message">Why do you want join to this club?</label>
+                        <textarea rows="4" class="form-control border px-2 py-3 rounded-0" id="message" name="message"></textarea>
                     </div>
                 </div>
             </div>
@@ -107,6 +101,52 @@ if(isset($_GET['id'])){
             var el = $('<div>')
             el.addClass("pop-alert alert alert-danger text-light")
             el.hide()
+
+            // Student ID validation
+            var studentId = $('#student_id').val();
+            if (!studentId || studentId.trim() === "") {
+                el.text("Student ID is required.")
+                $('.alert-container').html(el)
+                el.show('slow')
+                $('html, body').scrollTop(_this.offset().top - '150')
+                end_loader()
+                return false;
+            }
+
+            // Check if Student ID is exactly 6 digits
+            var studentIdPattern = /^[0-9]{6}$/;
+            if (!studentIdPattern.test(studentId)) {
+                el.text("Student ID must be exactly 6 digits.")
+                $('.alert-container').html(el)
+                el.show('slow')
+                $('html, body').scrollTop(_this.offset().top - '150')
+                end_loader()
+                return false;
+            }
+
+            // Check if email matches iMail pattern
+            var email = $('#email').val();
+            var imailPattern = /@imail\.sunway\.edu\.my$/i;
+            if (!imailPattern.test(email)) {
+                el.text("Please use your Sunway iMail address (@imail.sunway.edu.my).")
+                $('.alert-container').html(el)
+                el.show('slow')
+                $('html, body').scrollTop(_this.offset().top - '150')
+                end_loader()
+                return false;
+            }
+
+            // Check if student ID matches email prefix
+            var emailPrefix = email.split('@')[0];
+            if (studentId !== emailPrefix.substring(0, 6)) {
+                el.text("Your Student ID should match the first 6 digits of your iMail address.")
+                $('.alert-container').html(el)
+                el.show('slow')
+                $('html, body').scrollTop(_this.offset().top - '150')
+                end_loader()
+                return false;
+            }
+
             start_loader()
             $.ajax({
                 url:'./classes/Master.php?f=save_application',
@@ -120,7 +160,7 @@ if(isset($_GET['id'])){
                 error:err=>{
                     console.error(err)
                     el.text("An error occured while saving data")
-                    _this.prepend(el)
+                    $('.alert-container').html(el)
                     el.show('slow')
                     $('html, body').scrollTop(_this.offset().top - '150')
                     end_loader()
@@ -130,18 +170,17 @@ if(isset($_GET['id'])){
                         location.href= './?page=clubs/view_details&id=<?= isset($id) ? $id : '' ?>';
                     }else if(!!resp.msg){
                         el.text(resp.msg)
-                        _this.prepend(el)
+                        $('.alert-container').html(el)
                         el.show('slow')
                         $('html, body').scrollTop(_this.offset().top - '150')
                     }else{
                         el.text("An error occured while saving data")
-                        _this.prepend(el)
+                        $('.alert-container').html(el)
                         el.show('slow')
                         $('html, body').scrollTop(_this.offset().top - '150')
                     }
                     end_loader()
                     console
-
                 }
             })
         })
