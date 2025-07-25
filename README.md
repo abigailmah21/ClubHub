@@ -126,19 +126,3 @@ Username: admin
 Password: admin123
 ```
 
-You can modify the credentials directly in the `users` table via phpMyAdmin.
-
----
-
-## 📦 Missing Assets
-
-If certain images or styles are missing, download the assets:
-
-👉 [Download Assets from Dropbox](https://www.dropbox.com/s/tocky9atdwtk1gs/scas_assets.zip?dl=1)
-
-1. Extract the ZIP
-2. Copy the folders (e.g., `/assets`, `/uploads`) into the ClubHub project directory
-
-// REMOVE THIS!
-
-
