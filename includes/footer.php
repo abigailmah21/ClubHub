@@ -15,6 +15,11 @@
             </div>
         </div>
     </footer>
+
+    <!-- Chatbot Integration -->
+    <link rel="stylesheet" href="<?= base_url ?>assets/chatbot/chatbot.css">
+    <?php include(base_app.'assets/chatbot/chatbot.php'); ?>
+
     <!--   Core JS Files   -->
     <script src="<?= base_url ?>assets/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
     <!-- <script src="<?= base_url ?>assets/bootstrap/js/bootstrap.bundle.min.js" type="text/javascript"></script> -->
@@ -51,6 +56,11 @@
     <!-- Summernote  -->
     <script src="<?= base_url ?>assets/summernote/summernote-lite.min.js" type="text/javascript"></script>
 
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Chatbot JS -->
+    <script src="<?= base_url ?>assets/chatbot/chatbot.js"></script>
 
     <!-- Control Center for Material UI Kit: parallax effects, scripts for the example pages etc -->
     <!--  Google Maps Plugin    -->

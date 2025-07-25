@@ -326,43 +326,81 @@ Class Master extends DBConnection {
 		return json_encode($resp);
 	}
 	function dt_applications(){
-		extract($_POST);
- 
-		$totalCount = $this->conn->query("SELECT * FROM `application_list`")->num_rows;
-		$search_where = "";
-		if(!empty($search['value'])){
-			$search_where .= " where CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) LIKE '%{$search['value']}%' ";
-			$search_where .= " OR a.year_of_study LIKE '%{$search['value']}%' ";
-			$search_where .= " OR a.course LIKE '%{$search['value']}%' ";
-			if($this->settings->userdata('type') == 1)
-			$search_where .= " OR c.name LIKE '%{$search['value']}%' ";
-			$search_where .= " OR DATE_FORMAT(a.date_updated,'%M %d, %Y') LIKE '%{$search['value']}%' ";
-			// $search_where = " ({$search_where}) ";
+		try {
+			extract($_POST);
+	 
+			$totalCount = $this->conn->query("SELECT * FROM `application_list`")->num_rows;
+			$search_where = "";
+			if(!empty($search['value'])){
+				$search_where .= " WHERE (CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) LIKE '%{$search['value']}%' ";
+				$search_where .= " OR a.year_of_study LIKE '%{$search['value']}%' ";
+				$search_where .= " OR a.course LIKE '%{$search['value']}%' ";
+				if($this->settings->userdata('type') == 1)
+					$search_where .= " OR c.name LIKE '%{$search['value']}%' ";
+				$search_where .= " OR DATE_FORMAT(a.date_updated,'%M %d, %Y') LIKE '%{$search['value']}%')";
+			}
+			
+			$columns_arr = array(
+				"unix_timestamp(a.date_updated)",
+				"unix_timestamp(a.date_updated)",
+				"CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,''))",
+				"CONCAT(a.year_of_study, ' - ',a.course)",
+				"c.name",
+				"a.status"
+			);
+			
+			$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) as `name`, 
+				CONCAT(a.year_of_study,' - ',a.course) as `class`, c.name as club 
+				FROM `application_list` a 
+				INNER JOIN club_list c ON a.club_id = c.id 
+				{$search_where} 
+				ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} 
+				LIMIT {$length} OFFSET {$start}");
+				
+			if(!$query) {
+				throw new Exception($this->conn->error);
+			}
+			
+			$recordsFilterCount = $this->conn->query("SELECT a.id 
+				FROM `application_list` a 
+				INNER JOIN club_list c ON a.club_id = c.id 
+				{$search_where}")->num_rows;
+			
+			$recordsTotal = $totalCount;
+			$recordsFiltered = $recordsFilterCount;
+			$data = array();
+			$i = 1 + $start;
+			
+			while($row = $query->fetch_assoc()){
+				$row['no'] = $i++;
+				$row['date_updated'] = date("F d, Y H:i", strtotime($row['date_updated']));
+				$data[] = $row;
+			}
+			
+			// Set proper content type header
+			header('Content-Type: application/json');
+			
+			echo json_encode(array(
+				'draw' => intval($draw),
+				'recordsTotal' => intval($recordsTotal),
+				'recordsFiltered' => intval($recordsFiltered),
+				'data' => $data
+			));
+			
+		} catch (Exception $e) {
+			// Log error
+			error_log("DataTables error in dt_applications: " . $e->getMessage());
+			
+			// Send proper error response
+			header('Content-Type: application/json');
+			echo json_encode(array(
+				'draw' => isset($draw) ? intval($draw) : 0,
+				'recordsTotal' => 0,
+				'recordsFiltered' => 0,
+				'data' => array(),
+				'error' => $e->getMessage()
+			));
 		}
-		$columns_arr = array("unix_timestamp(a.date_updated)",
-							"unix_timestamp(a.date_updated)",
-							"CONCAT(lastname,', ',firstname,' ', COALESCE(middlename,''))",
-							"CONCAT(a.year_of_study, ' - ',a.course)",
-							"c.name",
-							"a.status");
-		$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) as `name`, CONCAT(a.year_of_study,' - ',a.course) as `class`, c.name as club FROM `application_list` a inner join club_list c on a.club_id = c.id  {$search_where} ORDER BY {$columns_arr[$order[0]['column']]} {$order[0]['dir']} limit {$length} offset {$start} ");
-		$recordsFilterCount = $this->conn->query("SELECT a.* FROM `application_list` a inner join club_list c on a.club_id = c.id  {$search_where} ")->num_rows;
-		
-		$recordsTotal= $totalCount;
-		$recordsFiltered= $recordsFilterCount;
-		$data = array();
-		$i= 1 + $start;
-		while($row = $query->fetch_assoc()){
-			$row['no'] = $i++;
-			$row['date_updated'] = date("F d, Y H:i",strtotime($row['date_updated']));
-			$data[] = $row;
-		}
-		echo json_encode(array('draw'=>$draw,
-							'recordsTotal'=>$recordsTotal,
-							'recordsFiltered'=>$recordsFiltered,
-							'data'=>$data
-							)
-		);
 	}
 	function dt_club_applications(){
 		extract($_POST);
@@ -466,7 +504,7 @@ Class Master extends DBConnection {
                         if(is_file(base_app.$filepath))
                             unlink(base_app.$filepath);
                         $uploaded_img = imagepng($t_image, base_app.$filepath);
-                        imagedestroy($gdImg);
+              *          imagedestroy($gdImg);
                         imagedestroy($t_image);
                         if(isset($uploaded_img)){
                             $this->conn->query("UPDATE event_list set event_cover = CONCAT('{$filepath}','?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$eid}'");
