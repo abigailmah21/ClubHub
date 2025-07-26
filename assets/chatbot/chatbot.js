@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const messagesContainer = document.querySelector('.chatbot-messages');
     const messageInput = document.querySelector('.message-input');
     const sendBtn = document.querySelector('.send-btn');
-    const minimizeBtn = document.querySelector('.minimize-btn');
     const closeBtn = document.querySelector('.close-btn');
     const header = document.querySelector('.chatbot-header');
     const suggestedQuestions = document.querySelectorAll('.suggested-question');
@@ -18,13 +17,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const API_KEY = "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";
     const MODEL = "deepseek/deepseek-chat-v3-0324:free";
     const SITE_URL = window.location.href;
-    const SITE_NAME = "ClubHub Assistant";
+    const SITE_NAME = "ClubHub AI Assistant";
 
     // ClubHub FAQ Knowledge Base
     const CLUBHUB_FAQS = [
         {
             question: "join club|become member|sign up club",
-            answer: "To join a club: 1) Browse the clubs directory 2) Click on a club you're interested in 3) Click the 'Join' button 4) Some clubs may require approval"
+            answer: "To join a club: 1) Browse the clubs directory 2) Click on a club you're interested in 3) Click on 'Apply to this Club' button 4) Some clubs may require some time for approval."
         },
         {
             question: "how many clubs can i join|club limit|maximum clubs",
@@ -83,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
             Current ClubHub features:
             - Club joining and management
             - Club Carnival (3 times yearly)
-            - Basic (free) membership`
         }
     ];
 
@@ -104,14 +102,6 @@ document.addEventListener('DOMContentLoaded', function() {
     header.addEventListener('click', function(e) {
         if (e.target === header || e.target.classList.contains('chatbot-title')) {
             chatbotContainer.classList.toggle('minimized');
-            const icon = minimizeBtn.querySelector('i');
-            if (chatbotContainer.classList.contains('minimized')) {
-                icon.classList.remove('fa-minus');
-                icon.classList.add('fa-plus');
-            } else {
-                icon.classList.remove('fa-plus');
-                icon.classList.add('fa-minus');
-            }
         }
     });
 
