@@ -328,11 +328,29 @@ Class Master extends DBConnection {
 	function dt_applications(){
 		try {
 			extract($_POST);
-	 
+			
+			// Set proper content type header
+			header('Content-Type: application/json');
+			
+			// Check database connection
+			if(!$this->conn) {
+				throw new Exception("Database connection failed");
+			}
+			
+			// Test basic query first
+			$test_query = $this->conn->query("SELECT COUNT(*) as count FROM `application_list`");
+			if(!$test_query) {
+				throw new Exception("Basic query failed: " . $this->conn->error);
+			}
+			
 			$totalCount = $this->conn->query("SELECT * FROM `application_list`")->num_rows;
+			if($this->conn->error) {
+				throw new Exception("Total count query failed: " . $this->conn->error);
+			}
+			
 			$search_where = "";
 			if(!empty($search['value'])){
-				$search_where .= " WHERE (CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) LIKE '%{$search['value']}%' ";
+				$search_where .= " WHERE (CONCAT(a.lastname,', ',a.firstname) LIKE '%{$search['value']}%' ";
 				$search_where .= " OR a.year_of_study LIKE '%{$search['value']}%' ";
 				$search_where .= " OR a.course LIKE '%{$search['value']}%' ";
 				if($this->settings->userdata('type') == 1)
@@ -343,13 +361,13 @@ Class Master extends DBConnection {
 			$columns_arr = array(
 				"unix_timestamp(a.date_updated)",
 				"unix_timestamp(a.date_updated)",
-				"CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,''))",
+				"CONCAT(a.lastname,', ',a.firstname)",
 				"CONCAT(a.year_of_study, ' - ',a.course)",
 				"c.name",
 				"a.status"
 			);
 			
-			$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname,', ',a.firstname,' ', COALESCE(a.middlename,'')) as `name`, 
+			$query = $this->conn->query("SELECT a.*, CONCAT(a.lastname,', ',a.firstname) as `name`, 
 				CONCAT(a.year_of_study,' - ',a.course) as `class`, c.name as club 
 				FROM `application_list` a 
 				INNER JOIN club_list c ON a.club_id = c.id 
@@ -358,13 +376,17 @@ Class Master extends DBConnection {
 				LIMIT {$length} OFFSET {$start}");
 				
 			if(!$query) {
-				throw new Exception($this->conn->error);
+				throw new Exception("Main query failed: " . $this->conn->error);
 			}
 			
 			$recordsFilterCount = $this->conn->query("SELECT a.id 
 				FROM `application_list` a 
 				INNER JOIN club_list c ON a.club_id = c.id 
 				{$search_where}")->num_rows;
+			
+			if($this->conn->error) {
+				throw new Exception("Filter count query failed: " . $this->conn->error);
+			}
 			
 			$recordsTotal = $totalCount;
 			$recordsFiltered = $recordsFilterCount;
@@ -376,9 +398,6 @@ Class Master extends DBConnection {
 				$row['date_updated'] = date("F d, Y H:i", strtotime($row['date_updated']));
 				$data[] = $row;
 			}
-			
-			// Set proper content type header
-			header('Content-Type: application/json');
 			
 			echo json_encode(array(
 				'draw' => intval($draw),
@@ -392,7 +411,6 @@ Class Master extends DBConnection {
 			error_log("DataTables error in dt_applications: " . $e->getMessage());
 			
 			// Send proper error response
-			header('Content-Type: application/json');
 			echo json_encode(array(
 				'draw' => isset($draw) ? intval($draw) : 0,
 				'recordsTotal' => 0,
@@ -504,7 +522,7 @@ Class Master extends DBConnection {
                         if(is_file(base_app.$filepath))
                             unlink(base_app.$filepath);
                         $uploaded_img = imagepng($t_image, base_app.$filepath);
-              *          imagedestroy($gdImg);
+                        imagedestroy($gdImg);
                         imagedestroy($t_image);
                         if(isset($uploaded_img)){
                             $this->conn->query("UPDATE event_list set event_cover = CONCAT('{$filepath}','?v=',unix_timestamp(CURRENT_TIMESTAMP)) where id = '{$eid}'");

@@ -14,7 +14,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 300);
 
     // API Configuration
-    const API_KEY = "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";
+    // IMPORTANT: This API key has been disabled due to being exposed in public github repository.
+            // To run this chatbot, please:
+            // 1. Go to https://openrouter.ai/keys
+            // 2. Generate a new API key (select "deepseek/deepseek-chat-v3-0324:free" model)
+            // 3. Replace the text "YOUR_NEW_API_KEY_HERE" below with your actual key
+    const API_KEY = "YOUR_NEW_API_KEY_HERE";
     const MODEL = "deepseek/deepseek-chat-v3-0324:free";
     const SITE_URL = window.location.href;
     const SITE_NAME = "ClubHub AI Assistant";
